@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 ข้อง่ายๆ สุขภาพดีหน้าฝน | Bangkok Family Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Kanit', 'Sarabun', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation: gradientShift 8s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            25% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+            50% { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+            75% { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        }
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .slide-in {
+            animation: slideIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .rain-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .rain-drop {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3));
+            animation: rain-fall linear infinite;
+        }
+        @keyframes rain-fall {
+            to { transform: translateY(100vh); }
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark-mode .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+        }
+        .tip-card {
+            transform: perspective(1000px) rotateY(0deg);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tip-card:hover {
+            transform: perspective(1000px) rotateY(5deg) scale(1.05);
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.7;
+            animation: blob 7s infinite;
+        }
+        @keyframes blob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-all duration-500">
+    <!-- Rain Effect -->
+    <div class="rain-animation" id="rainEffect"></div>
+    
+    <!-- Decorative Blobs -->
+    <div class="blob w-72 h-72 bg-purple-400 -top-20 -left-20 fixed"></div>
+    <div class="blob w-72 h-72 bg-pink-400 -bottom-20 -right-20 fixed" style="animation-delay: 2s;"></div>
+    <div class="blob w-72 h-72 bg-blue-400 top-1/2 left-1/2 fixed" style="animation-delay: 4s;"></div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="fixed top-4 right-4 z-50 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-300">
+        <svg id="sunIcon" class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+        </svg>
+        <svg id="moonIcon" class="w-6 h-6 text-gray-900 hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+        </svg>
+    </button>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white relative z-10">
+        <div class="container mx-auto px-4 py-8 md:py-12">
+            <div class="text-center">
+                <h1 class="text-3xl md:text-5xl font-bold mb-4 float-animation">
+                    🌧️ 5 ข้อง่ายๆ สุขภาพดีหน้าฝน 🌈
+                </h1>
+                <p class="text-lg md:text-xl opacity-90">
+                    คำแนะนำจากกรมอนามัย เพื่อสุขภาพที่แข็งแรงในช่วงอากาศเปลี่ยนแปลง
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 md:py-12 relative z-10">
+        <!-- Introduction -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8 mb-8 slide-in">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="flex-1">
+                    <h2 class="text-2xl md:text-3xl font-bold text-purple-600 dark:text-purple-400 mb-4">
+                        ⚠️ ระวังอากาศเปลี่ยนแปลง
+                    </h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        ช่วงนี้อากาศเปลี่ยนแปลงบ่อย เดี๋ยวร้อน เดี๋ยวฝน อาจทำให้ร่างกายเจ็บป่วยได้ง่าย 
+                        โดยเฉพาะกับเด็กเล็กและผู้สูงอายุที่มีภูมิคุ้มกันต่ำ เสี่ยงป่วยเป็นโรคเกี่ยวกับระบบทางเดินหายใจ 
+                        ไข้หวัด และภูมิแพ้อากาศ
+                    </p>
+                </div>
+                <img src="https://lh5.googleusercontent.com/d/1uvOmBrPWV2BmRb3ld3r7FeG4vUqNWpRj" 
+                     alt="สุขภาพดีหน้าฝน" 
+                     class="w-full md:w-64 h-48 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+            </div>
+        </div>
+
+        <!-- 5 Health Tips -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Tip 1 -->
+            <div class="tip-card bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">💧</div>
+                <h3 class="text-xl font-bold mb-3">1. ดื่มน้ำให้เพียงพอ</h3>
+                <p class="opacity-95">ดื่มน้ำเปล่าวันละ 6-8 แก้ว เพื่อให้อุณหภูมิในร่างกายคงที่</p>
+            </div>
+
+            <!-- Tip 2 -->
+            <div class="tip-card bg-gradient-to-br from-orange-400 to-red-500 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">🌿</div>
+                <h3 class="text-xl font-bold mb-3">2. กินอาหารสมุนไพรไทย</h3>
+                <p class="opacity-95">ปรุงด้วยขิง ข่า ตะไคร้ ใบกะเพรา เพิ่มอุณหภูมิให้ร่างกาย</p>
+            </div>
+
+            <!-- Tip 3 -->
+            <div class="tip-card bg-gradient-to-br from-green-400 to-emerald-600 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">🥗</div>
+                <h3 class="text-xl font-bold mb-3">3. ผักผลไม้ตามฤดูกาล</h3>
+                <p class="opacity-95">มะเขือเปราะ มะนาว ถั่วพู ชะอม กล้วยน้ำว้า ส้มโอ เพิ่มภูมิต้านทาน</p>
+            </div>
+
+            <!-- Tip 4 -->
+            <div class="tip-card bg-gradient-to-br from-purple-400 to-pink-500 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">🏃‍♀️</div>
+                <h3 class="text-xl font-bold mb-3">4. ออกกำลังกายสม่ำเสมอ</h3>
+                <p class="opacity-95">เดินเร็ว วิ่งเหยาะๆ สัปดาห์ละ 3-5 วัน วันละ 30 นาที</p>
+            </div>
+
+            <!-- Tip 5 -->
+            <div class="tip-card bg-gradient-to-br from-indigo-400 to-blue-600 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">😴</div>
+                <h3 class="text-xl font-bold mb-3">5. นอนพักผ่อนเพียงพอ</h3>
+                <p class="opacity-95">ผู้ใหญ่ 6-8 ชั่วโมง เด็ก 11-14 ชั่วโมง ผู้สูงอายุ 7-8 ชั่วโมง</p>
+            </div>
+
+            <!-- Extra Tip -->
+            <div class="tip-card bg-gradient-to-br from-teal-400 to-cyan-600 text-white rounded-2xl p-6 shadow-xl">
+                <div class="text-4xl mb-4">☔</div>
+                <h3 class="text-xl font-bold mb-3">💡 เคล็ดลับพิเศษ</h3>
+                <p class="opacity-95">ถ้าตัวเปียกฝน รีบเช็ดตัวให้แห้ง เปลี่ยนเสื้อผ้าทันที รักษาความอบอุ่น</p>
+            </div>
+        </div>
+
+        <!-- Bangkok Family Center Info -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-2xl p-8 text-white">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2 float-animation">
+                    𝘽𝙖𝙣𝙜𝙠𝙤𝙠 𝙁𝙖𝙢𝙞𝙡𝙮 𝘾𝙚𝙣𝙩𝙚𝙧
+                </h2>
+                <p class="text-lg opacity-90">𝙇𝙚𝙖𝙧𝙣𝙞𝙣𝙜 𝙩𝙤𝙜𝙚𝙩𝙝𝙚𝙧, 𝘾𝙧𝙚𝙖𝙩𝙞𝙣𝙜 𝙩𝙝𝙚 𝙛𝙪𝙩𝙪𝙧𝙚</p>
+            </div>
+
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl p-6 mb-6">
+                <h3 class="text-xl font-bold mb-4">📍 พิพิธภัณฑ์เด็กกรุงเทพมหานครแห่งที่ 2 (ทุ่งครุ)</h3>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="mb-2">🎯 บริการสำหรับเด็ก เยาวชน และครอบครัว</p>
+                        <p class="mb-2">📅 เปิด: อังคาร-อาทิตย์ และวันหยุดนักขัตฤกษ์</p>
+                        <p class="mb-2">🚫 ปิดทุกวันจันทร์</p>
+                        <p>⏰ เวลา: 10.00-16.00 น.</p>
+                    </div>
+                    <div>
+                        <p class="mb-2">📞 โทร: 02 426 3623</p>
+                        <p class="mb-2">📱 มือถือ: 082 752 9202</p>
+                        <p>💬 Line Official: @BKK-CDM2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-4 justify-center">
+                <a href="https://lin.ee/vtEP8xS" target="_blank" 
+                   class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 pulse-animation">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        </svg>
+                        LINE Official
+                    </span>
+                </a>
+                <a href="https://maps.app.goo.gl/fiDFHrugowtAi15a6" target="_blank" 
+                   class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        Google Maps
+                    </span>
+                </a>
+                <a href="tel:024263623" 
+                   class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <span class="flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                        โทรติดต่อ
+                    </span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8 mt-12 relative z-10">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-lg mb-2">สุขภาพดี เริ่มต้นที่ตัวเรา 💪</p>
+            <p class="opacity-75">© 2024 Bangkok Family Center - All rights reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const body = document.body;
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            sunIcon.classList.toggle('hidden');
+            moonIcon.classList.toggle('hidden');
+            
+            // Save preference
+            localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+        });
+
+        // Load saved preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark-mode');
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+        }
+
+        // Rain Effect
+        function createRain() {
+            const rainContainer = document.getElementById('rainEffect');
+            const rainDropCount = 50;
+            
+            for (let i = 0; i < rainDropCount; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                rainContainer.appendChild(drop);
+            }
+        }
+
+        // Initialize rain effect
+        createRain();
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = '0.2s';
+                    entry.target.classList.add('slide-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.tip-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Interactive hover effect for tips
+        document.querySelectorAll('.tip-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'perspective(1000px) rotateY(5deg) scale(1.05)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateY(0deg) scale(1)';
+            });
+        });
+
+        // Smooth scroll for mobile
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add touch feedback for mobile
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('button, a').forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.7';
+                });
+                element.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        }
+
+        // Dynamic greeting based on time
+        const hour = new Date().getHours();
+        let greeting = '';
+        if (hour < 12) greeting = '🌅 สวัสดีตอนเช้า';
+        else if (hour < 16) greeting = '☀️ สวัสดีตอนบ่าย';
+        else if (hour < 20) greeting = '🌆 สวัสดีตอนเย็น';
+        else greeting = '🌙 สวัสดีตอนค่ำ';
+
+        // You can add this greeting somewhere in your page if needed
+        console.log(greeting + ' - ขอให้สุขภาพแข็งแรง!');
+    </script>
+</body>
+</html>
